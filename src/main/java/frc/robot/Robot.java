@@ -46,7 +46,6 @@ public class Robot extends LoggedRobot {
 
     //Logger.addDataReceiver(new WPILOGWriter()); //Log to USB
     Logger.addDataReceiver(new NT4Publisher());
-    break;
 
     // Start AdvantageKit logger
     Logger.start();
