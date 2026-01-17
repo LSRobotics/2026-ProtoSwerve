@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import frc.robot.commands.AlignCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlignCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Vision.VisionIOPhoton;
+import frc.robot.subsystems.Vision.VisionSubsystem;
 
 public class RobotContainer {
     // private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
@@ -45,13 +48,16 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     private final SendableChooser<Command> autoChooser;
+    private final VisionSubsystem m_Vision = new VisionSubsystem(new VisionIOPhoton("Arducam_OV9281_USB_Camera", drivetrain::addVisionMeasurement)); 
 
     public RobotContainer() {
+        m_Vision.periodic();
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureBindings();
+
     }
 
     public Command getAutonomousCommand() {
@@ -65,8 +71,6 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
                 // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
-                                                                                                   // negative Y
-                                                                                                   // (forward)
                         .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                         .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
                                                                                     // negative X (left)
@@ -77,6 +81,11 @@ public class RobotContainer {
         joystick.pov(180).onTrue(drivetrain.applyRequest(() -> drive.withVelocityX(-DPAD)));
         joystick.pov(90).onTrue(drivetrain.applyRequest(() -> drive.withVelocityY(DPAD)));
         joystick.pov(270).onTrue(drivetrain.applyRequest(() -> drive.withVelocityY(-DPAD)));
+
+        joystick.pov(45).onTrue(drivetrain.applyRequest(() -> drive.withVelocityX(DPAD*Math.sqrt(0.5)).withVelocityY(DPAD*Math.sqrt(0.5))));
+        joystick.pov(135).onTrue(drivetrain.applyRequest(() -> drive.withVelocityX(-DPAD*Math.sqrt(0.5)).withVelocityY(DPAD*Math.sqrt(0.5))));
+        joystick.pov(225).onTrue(drivetrain.applyRequest(() -> drive.withVelocityX(-DPAD*Math.sqrt(0.5)).withVelocityY(-DPAD*Math.sqrt(0.5))));
+        joystick.pov(315).onTrue(drivetrain.applyRequest(() -> drive.withVelocityX(DPAD*Math.sqrt(0.5)).withVelocityY(-DPAD*Math.sqrt(0.5))));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
