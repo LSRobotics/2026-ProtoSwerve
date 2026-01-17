@@ -49,10 +49,9 @@ public class VisionIOPhoton implements VisionIO {
 
             visionEst.ifPresent(
                     est -> {
-                        // Change our trust in the measurement based on the tags we can see
                         var estStdDevs = getEstimationStdDevs();
 
-                        //estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                        estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
                     });
             if (visionEst.isPresent()){inputs.pose = visionEst.get().estimatedPose;}
         }
@@ -61,17 +60,15 @@ public class VisionIOPhoton implements VisionIO {
 
     private void updateEstimationStdDevs(Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
         if (estimatedPose.isEmpty()) {
-            // No pose input. Default to single-tag std devs
+
             curStdDevs = kSingleTagStdDevs;
 
         } else {
-            // Pose present. Start running Heuristic
+
             var estStdDevs = kSingleTagStdDevs;
             int numTags = 0;
             double avgDist = 0;
 
-            // Precalculation - see how many tags we found, and calculate an
-            // average-distance metric
             for (var tgt : targets) {
                 var tagPose = estimator.getFieldTags().getTagPose(tgt.getFiducialId());
                 if (tagPose.isEmpty())
@@ -85,15 +82,15 @@ public class VisionIOPhoton implements VisionIO {
             }
 
             if (numTags == 0) {
-                // No tags visible. Default to single-tag std devs
+
                 curStdDevs = kSingleTagStdDevs;
             } else {
-                // One or more tags visible, run the full heuristic.
+
                 avgDist /= numTags;
-                // Decrease std devs if multiple targets are visible
+
                 if (numTags > 1)
                     estStdDevs = kMultiTagStdDevs;
-                // Increase std devs based on (average) distance
+
                 if (numTags == 1 && avgDist > 4)
                     estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
                 else
