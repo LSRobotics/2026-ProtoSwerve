@@ -6,6 +6,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.Supplier;
+
+import frc.robot.util.HubStatus;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -23,9 +27,12 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlignCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.util.HubStatus;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision.VisionIOPhoton;
 import frc.robot.subsystems.Vision.VisionSubsystem;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.util.SendableSupplier;
 
 public class RobotContainer {
     // private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
@@ -46,23 +53,27 @@ public class RobotContainer {
     private final CommandXboxController joystick = new CommandXboxController(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    
 
     private final SendableChooser<Command> autoChooser;
     private final VisionSubsystem m_Vision = new VisionSubsystem(new VisionIOPhoton("Arducam_OV9281_USB_Camera", drivetrain::addVisionMeasurement)); 
 
     public RobotContainer() {
-        m_Vision.periodic();
-
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
-
         configureBindings();
+
+        HubStatus.getFirstInactiveAlliance(); //init
+        SmartDashboard.putData("Is Active Hub", new SendableSupplier<Boolean>("IsActiveHub", () -> HubStatus.isActive()));
+        SmartDashboard.putData("Active Hub", new SendableSupplier<Character>("ActiveHub", () -> HubStatus.getActiveHub()));
+
 
     }
 
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
         return autoChooser.getSelected();
+        
     }
 
     private void configureBindings() {

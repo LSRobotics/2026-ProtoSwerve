@@ -8,12 +8,17 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import frc.robot.util.HubStatus;
+import frc.robot.util.SendableSupplier;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import com.ctre.phoenix6.SignalLogger;
 import com.google.flatbuffers.Constants;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import frc.robot.util.SendableSupplier;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 /**
@@ -51,6 +56,9 @@ public class Robot extends LoggedRobot {
     // Start AdvantageKit logger
     Logger.start();
 
+    if (Robot.isSimulation()){    DriverStationSim.setFmsAttached(true); DriverStationSim.setGameSpecificMessage("R");}
+
+
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -80,7 +88,7 @@ public class Robot extends LoggedRobot {
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
 
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+      CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }
 
@@ -94,13 +102,17 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+
+
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+      CommandScheduler.getInstance().cancel(m_autonomousCommand);
     }
+
   }
 
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putBoolean("Hub Active", HubStatus.isActive());
   }
 
   @Override

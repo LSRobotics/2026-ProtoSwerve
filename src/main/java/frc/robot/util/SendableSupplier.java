@@ -22,6 +22,8 @@ public class SendableSupplier<T> implements Supplier<T>, Sendable {
     @Override
     public void initSendable(SendableBuilder builder) {
         T sample = supplier.get();
+
+        System.out.println("=== initSendable called for: " + name + " ===");
         
         if (sample instanceof Boolean) {
             builder.addBooleanProperty(name, 
@@ -39,6 +41,16 @@ public class SendableSupplier<T> implements Supplier<T>, Sendable {
         else if (sample instanceof String) {
             builder.addStringProperty(name, 
                 () -> (String) supplier.get(), 
+                null);
+        }
+        else if (sample instanceof Character) {
+            builder.addStringProperty(name, 
+                () -> String.valueOf((Character) supplier.get()), 
+                null);
+        }
+        else if (sample == null) {
+            builder.addStringProperty(name, 
+                () -> "null", 
                 null);
         }
         else {
