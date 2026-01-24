@@ -36,7 +36,7 @@ public class VisionIOPhoton implements VisionIO {
         estimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded),
                 VisionConstants.cameraToRobot);
     }
-
+    
     public void updateInputs(VisionIOInputs inputs) {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (var result : camera.getAllUnreadResults()) {
