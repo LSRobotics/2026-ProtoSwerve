@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import frc.robot.util.HubStatus;
@@ -17,6 +18,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import frc.robot.commands.AlignCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +32,7 @@ import frc.robot.commands.AlignCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.HubStatus;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Vision.VisionConstants;
 import frc.robot.subsystems.Vision.VisionIOPhoton;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -56,16 +60,15 @@ public class RobotContainer {
     
 
     private final SendableChooser<Command> autoChooser;
-    private final VisionSubsystem m_Vision = new VisionSubsystem(new VisionIOPhoton("Arducam_OV9281_USB_Camera", drivetrain::addVisionMeasurement)); 
-    private final VisionSubsystem m_Vision2 = new VisionSubsystem(new VisionIOPhoton("Arducam_OV9281_USB_Camera (1)", drivetrain::addVisionMeasurement)); 
+    private final VisionSubsystem m_Vision = new VisionSubsystem(new VisionIOPhoton("Arducam_OV9281_USB_Camera", drivetrain::addVisionMeasurement, VisionConstants.cameraToRobot1)); 
+   // private final VisionSubsystem m_Vision2 = new VisionSubsystem(new VisionIOPhoton("Arducam_OV9281_USB_Camera (1)", drivetrain::addVisionMeasurement,VisionConstants.cameraToRobot2)); 
 
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
         configureBindings();
-
-
+        
         HubStatus.getFirstInactiveAlliance(); //init
         SmartDashboard.putData("Is Active Hub", new SendableSupplier<Boolean>("IsActiveHub", () -> HubStatus.isActive()));
         SmartDashboard.putData("Active Hub", new SendableSupplier<Character>("ActiveHub", () -> HubStatus.getActiveHub()));

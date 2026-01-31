@@ -187,6 +187,3 @@ compile_commands.json
 .factorypath
 
 #Advantagekit
-
-src/main/java/frc/robot/BuildConstants.java
-src\main\java\frc\robot\BuildConstants.java

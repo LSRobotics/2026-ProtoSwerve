@@ -40,7 +40,7 @@ public class Robot extends LoggedRobot {
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
     Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);   
     Logger.recordMetadata(
         "GitDirty",
         switch (BuildConstants.DIRTY) {

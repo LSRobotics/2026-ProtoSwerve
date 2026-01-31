@@ -1,6 +1,7 @@
 package frc.robot.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
@@ -45,6 +46,7 @@ public class HubStatus {
 
     public static char getActiveHub() {
         double matchTime = DriverStation.getMatchTime();
+        double time = Timer.getMatchTime();
         char firstInactive = getFirstInactiveAlliance();
 
         if (firstInactive == ' ') {

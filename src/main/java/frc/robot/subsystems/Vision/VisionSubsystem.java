@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase{
     private final VisionIO io;
-    Field2d field = new Field2d();
+    //Field2d field = new Field2d();
     VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
     public VisionSubsystem(VisionIO io) {
         this.io = io;
@@ -19,8 +19,8 @@ public class VisionSubsystem extends SubsystemBase{
         io.updateInputs(inputs);
 
         Pose3d pose = inputs.pose;
-        field.setRobotPose(pose.toPose2d());
-        SmartDashboard.putData("Field",field);
+        //field.setRobotPose(pose.toPose2d());
+        //SmartDashboard.putData("Field",field);
     
     }
     

@@ -3,6 +3,7 @@ package frc.robot.subsystems.Vision;
 import java.util.List;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -10,6 +11,7 @@ import org.photonvision.targeting.MultiTargetPNPResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.PnpResult;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -30,20 +32,31 @@ public class VisionIOPhoton implements VisionIO {
     private Matrix<N3, N1> curStdDevs;
     private final EstimateConsumer estConsumer;
 
-    public VisionIOPhoton(String cameraName, EstimateConsumer estConsumer) {
+    public VisionIOPhoton(String cameraName, EstimateConsumer estConsumer, Transform3d cameraToRobot) {
         this.estConsumer = estConsumer;
         camera = new PhotonCamera(cameraName);
         estimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded),
-                VisionConstants.cameraToRobot);
+                cameraToRobot);
     }
-    
+
     public void updateInputs(VisionIOInputs inputs) {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (var result : camera.getAllUnreadResults()) {
+            // Pose3d[] tags = new Pose3d[result.targets.size()]; 
+            // Pose3d[] toTags = new Pose3d[result.targets.size()]; 
+            // AprilTagFieldLayout field = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+            // for (int i=0;i<result.targets.size();i++){
+            //     tags[i]=field.getTagPose(result.targets.get(i).fiducialId).get();
+            //     toTags[i] = mresult.targets.get(i).bestCameraToTarget; 
+            // }
+            // Logger.recordOutput("Tags", tags);
             visionEst = estimator.estimateCoprocMultiTagPose(result);
             if (visionEst.isEmpty()) {
-                visionEst = estimator.estimateLowestAmbiguityPose(result);                
+                visionEst = estimator.estimateLowestAmbiguityPose(result);
+                if (visionEst.isPresent()){Logger.recordOutput("Estpose",visionEst.get().estimatedPose);}
+                return;
             }
+            Logger.recordOutput("Estpose",visionEst.get().estimatedPose);
 
             updateEstimationStdDevs(visionEst, result.getTargets());
 
@@ -53,12 +66,15 @@ public class VisionIOPhoton implements VisionIO {
 
                         estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
                     });
-            if (visionEst.isPresent()){inputs.pose = visionEst.get().estimatedPose;}
+            if (visionEst.isPresent()) {
+                inputs.pose = visionEst.get().estimatedPose;
+            }
         }
 
     }
 
-    private void updateEstimationStdDevs(Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+    private void updateEstimationStdDevs(Optional<EstimatedRobotPose> estimatedPose,
+            List<PhotonTrackedTarget> targets) {
         if (estimatedPose.isEmpty()) {
 
             curStdDevs = kSingleTagStdDevs;

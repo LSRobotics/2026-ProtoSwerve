@@ -4,6 +4,7 @@ import java.util.jar.Attributes.Name;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 public class SendableSupplier<T> implements Supplier<T>, Sendable {
     private final Supplier<T> supplier;
@@ -48,6 +49,7 @@ public class SendableSupplier<T> implements Supplier<T>, Sendable {
                 () -> String.valueOf((Character) supplier.get()), 
                 null);
         }
+
         else if (sample == null) {
             builder.addStringProperty(name, 
                 () -> "null", 
