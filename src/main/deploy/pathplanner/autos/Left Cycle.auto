@@ -7,12 +7,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Depot to Trench"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "Left Trench to Start of Balls"
           }
         },
