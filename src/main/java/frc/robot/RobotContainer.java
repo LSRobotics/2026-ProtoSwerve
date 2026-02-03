@@ -15,8 +15,9 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import frc.robot.commands.AimAtHubCommand;
 import frc.robot.commands.AlignCommand;
-
+import frc.robot.commands.TurnTurretCommand;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -32,6 +33,8 @@ import frc.robot.commands.AlignCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.HubStatus;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Turret.TurretSubsystem;
+import frc.robot.subsystems.Turret.TurretIOTalon;
 import frc.robot.subsystems.Vision.VisionConstants;
 import frc.robot.subsystems.Vision.VisionIOPhoton;
 import frc.robot.subsystems.Vision.VisionSubsystem;
@@ -55,8 +58,11 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController joystick = new CommandXboxController(0);
+    private final CommandXboxController m_Operator = new CommandXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+    private final TurretSubsystem turret = new TurretSubsystem(new TurretIOTalon());
     
 
     private final SendableChooser<Command> autoChooser;
@@ -128,6 +134,8 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+        turret.setDefaultCommand(new TurnTurretCommand(turret, ()->m_Operator.getLeftX()));
+        m_Operator.a().whileTrue(new AimAtHubCommand(turret, ()->drivetrain.getState().Pose, ()->drivetrain.getState().Speeds));
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 }
