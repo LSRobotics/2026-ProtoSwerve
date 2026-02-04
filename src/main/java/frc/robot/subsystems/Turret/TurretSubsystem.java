@@ -3,6 +3,7 @@ package frc.robot.subsystems.Turret;
 import static edu.wpi.first.units.Units.Degrees;
 
 import org.littletonrobotics.junction.Logger;
+import org.xml.sax.ext.DeclHandler;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
@@ -15,20 +16,17 @@ public class TurretSubsystem extends SubsystemBase{
 
     private final TurretIO io;
     private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
-    private final PIDController pid = new PIDController(0.001, 0, 0d);
+    private PIDController pid = new PIDController(0.0001, 0, 0d);
 
 
     public TurretSubsystem(TurretIO io){
         this.io = io;
         pid.setTolerance(1);
-
     }
 
     public void periodic(){
         io.updateInputs(inputs);
         Logger.processInputs("Turret", inputs);
-
-        
     }
 
     public void setVoltage(Voltage voltage){
@@ -40,14 +38,18 @@ public class TurretSubsystem extends SubsystemBase{
     }
 
     public void pointAtAngle(Angle angle){
+        pid.setSetpoint(angle.in(Degrees));
         double speed = pid.calculate(inputs.turretAngle.in(Degrees), angle.in(Degrees));
         speed = MathUtils.clamp(-TurretConstants.maxControlSpeed, TurretConstants.maxControlSpeed, speed);
         setSpeed(speed);
-        pid.close();
     }
 
     public Angle getAngle(){
         return inputs.turretAngle;
+    }
+
+    public void zeroEncoder(){
+        io.zeroEncoder();
     }
 
     

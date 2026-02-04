@@ -24,5 +24,10 @@ public class TurretIOTalon implements TurretIO {
     public void setTurretSpeed(double speed) {
         turretMotor.set(speed);
     }
+
+    @Override
+    public void zeroEncoder(){
+        turretMotor.setPosition(0);
+    }
     
 }

@@ -43,9 +43,9 @@ public class AimAtHubCommand extends Command {
         Pose2d predictedTurretPose = turretPose.plus(
                 new Transform2d(
                         new Translation2d(
-                                robotVelocity.vxMetersPerSecond * 0.2,
-                                robotVelocity.vyMetersPerSecond * 0.2),
-                        new Rotation2d(robotVelocity.omegaRadiansPerSecond * 0.2)));
+                                robotVelocity.vxMetersPerSecond * 0.05,
+                                robotVelocity.vyMetersPerSecond * 0.05),
+                        new Rotation2d(robotVelocity.omegaRadiansPerSecond * 0.05)));
         Rotation2d angleToHub = hubPose.getTranslation().minus(predictedTurretPose.getTranslation()).getAngle();
         angleToHub = angleToHub.minus(robotPoseSupplier.get().getRotation());
         int trajectoryPoints = 20;
@@ -71,7 +71,7 @@ public class AimAtHubCommand extends Command {
 
         Logger.recordOutput("Turret/ActualRay", new Pose2d[] {
                 turretPose,
-                new Pose2d(turretPose.getTranslation().plus(new Translation2d(2.0, actualFieldAngle)), actualFieldAngle)
+                new Pose2d(turretPose.getTranslation().plus(new Translation2d(5.0, actualFieldAngle)), actualFieldAngle)
         });
 
         turret.pointAtAngle(Degrees.of(angleToHub.getDegrees()));
@@ -79,6 +79,7 @@ public class AimAtHubCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        turret.setSpeed(0);
     }
 
 }

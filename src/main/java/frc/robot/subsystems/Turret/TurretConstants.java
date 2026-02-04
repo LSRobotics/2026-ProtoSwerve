@@ -10,7 +10,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 
 public class TurretConstants {
     public static final Translation2d turretOffset = new Translation2d(0.0, 0.0); //From center
-    public static final double turretGearRatio =3.84;
+    public static final double turretGearRatio =4d;
 
     public static final AngularVelocity maxSpeed = DegreesPerSecond.of(50);
 

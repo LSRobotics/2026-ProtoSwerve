@@ -35,5 +35,7 @@ public interface TurretIO {
 
     public default void resetTurretEncoder(Angle angle){};
 
+    public default void zeroEncoder(){};
+
     
 }

@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -135,6 +136,7 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         turret.setDefaultCommand(new TurnTurretCommand(turret, ()->m_Operator.getLeftX()));
+        m_Operator.b().onTrue(new InstantCommand(()->turret.zeroEncoder()));
         m_Operator.a().whileTrue(new AimAtHubCommand(turret, ()->drivetrain.getState().Pose, ()->drivetrain.getState().Speeds));
         drivetrain.registerTelemetry(logger::telemeterize);
     }
