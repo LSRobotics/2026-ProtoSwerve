@@ -15,13 +15,11 @@ import frc.robot.util.MathUtils;
 public class TurretSubsystem extends SubsystemBase{
 
     private final TurretIO io;
-    private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
-    private PIDController pid = new PIDController(0.0001, 0, 0d);
+    public TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged(); //TODO: Make private when done debugging
 
 
     public TurretSubsystem(TurretIO io){
         this.io = io;
-        pid.setTolerance(1);
     }
 
     public void periodic(){
@@ -35,13 +33,6 @@ public class TurretSubsystem extends SubsystemBase{
 
     public void setSpeed(double speed){
         io.setTurretSpeed(speed);
-    }
-
-    public void pointAtAngle(Angle angle){
-        pid.setSetpoint(angle.in(Degrees));
-        double speed = pid.calculate(inputs.turretAngle.in(Degrees), angle.in(Degrees));
-        speed = MathUtils.clamp(-TurretConstants.maxControlSpeed, TurretConstants.maxControlSpeed, speed);
-        setSpeed(speed);
     }
 
     public Angle getAngle(){

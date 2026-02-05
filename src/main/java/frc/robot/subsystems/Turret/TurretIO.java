@@ -22,6 +22,7 @@ public interface TurretIO {
         public boolean atForwardLimit = false;
         public boolean atReverseLimit = false;
         public Current turretCurrent = Amps.of(0);
+        public double turretDegrees = 0d;
     }
 
     public default void updateInputs(TurretIOInputs inputs){};

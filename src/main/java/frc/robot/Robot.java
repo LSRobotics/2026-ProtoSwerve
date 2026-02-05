@@ -56,7 +56,7 @@ public class Robot extends LoggedRobot {
     // Start AdvantageKit logger
     Logger.start();
 
-    if (Robot.isSimulation()){    DriverStationSim.setFmsAttached(true); DriverStationSim.setGameSpecificMessage("R");}
+    if (Robot.isSimulation()){DriverStationSim.setFmsAttached(true); DriverStationSim.setGameSpecificMessage("R");}
 
 
     // Instantiate our RobotContainer. This will perform all our button bindings,

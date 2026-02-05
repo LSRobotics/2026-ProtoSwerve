@@ -137,6 +137,8 @@ public class RobotContainer {
 
         turret.setDefaultCommand(new TurnTurretCommand(turret, ()->m_Operator.getLeftX()));
         m_Operator.b().onTrue(new InstantCommand(()->turret.zeroEncoder()));
+        //m_Operator.x().whileTrue(new InstantCommand(()->turret.pointAtAngle(Degrees.of(0))));
+        //m_Operator.y().whileTrue(new InstantCommand(()->turret.pointAtAngle(Degrees.of(180))));
         m_Operator.a().whileTrue(new AimAtHubCommand(turret, ()->drivetrain.getState().Pose, ()->drivetrain.getState().Speeds));
         drivetrain.registerTelemetry(logger::telemeterize);
     }

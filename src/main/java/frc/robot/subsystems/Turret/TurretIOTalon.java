@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Turret;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.Voltage;
@@ -13,6 +15,7 @@ public class TurretIOTalon implements TurretIO {
         inputs.turretVelocity = turretMotor.getVelocity().getValue();
         inputs.turretCurrent = turretMotor.getSupplyCurrent().getValue();
         inputs.turretAngle = inputs.motorAngle.times(TurretConstants.turretGearRatio); 
+        inputs.turretDegrees = inputs.turretAngle.in(Degrees);
     }
 
     @Override
