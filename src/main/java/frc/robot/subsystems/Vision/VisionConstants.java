@@ -16,12 +16,9 @@ public class VisionConstants {
      public final static Transform3d cameraToRobot1 = new Transform3d(
         new Translation3d(Inches.of(1.5),Inches.of(6),Inches.of(18.5)), 
         new Rotation3d(0,0,0));
-    // public final static Transform3d cameraToRobot2 = new Transform3d(
-    //     new Translation3d(Inches.of(-1.5),Inches.of(-3.25),Inches.of(18.5)), 
-    //     new Rotation3d(Degrees.of(0),Degrees.of(0),Degrees.of(180)));
-
-    //public final static Transform3d cameraToRobot1 = new Transform3d(Inches.of(0),Inches.of(0),Inches.of(0), new Rotation3d(Degrees.of(0),Degrees.of(0),Degrees.of(0)));
-    //public final static Transform3d cameraToRobot2 = new Transform3d(Inches.of(0),Inches.of(0),Inches.of(0), new Rotation3d(Degrees.of(0),Degrees.of(0),Degrees.of(0)));
+    public final static Transform3d cameraToRobot2 = new Transform3d(
+        new Translation3d(Inches.of(-1.5),Inches.of(-3.25),Inches.of(18.5)), 
+        new Rotation3d(Degrees.of(0),Degrees.of(0),Degrees.of(180)));
 
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(10, 10, 25);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(1, 1, 2.5);

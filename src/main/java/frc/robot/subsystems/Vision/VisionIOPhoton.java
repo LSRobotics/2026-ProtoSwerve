@@ -8,6 +8,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.MultiTargetPNPResult;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.PnpResult;
 
@@ -41,7 +42,7 @@ public class VisionIOPhoton implements VisionIO {
 
     public void updateInputs(VisionIOInputs inputs) {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
-        for (var result : camera.getAllUnreadResults()) {
+        for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
             // Pose3d[] tags = new Pose3d[result.targets.size()]; 
             // Pose3d[] toTags = new Pose3d[result.targets.size()]; 
             // AprilTagFieldLayout field = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
@@ -53,10 +54,10 @@ public class VisionIOPhoton implements VisionIO {
             visionEst = estimator.estimateCoprocMultiTagPose(result);
             if (visionEst.isEmpty()) {
                 visionEst = estimator.estimateLowestAmbiguityPose(result);
-                if (visionEst.isPresent()){Logger.recordOutput("Estpose",visionEst.get().estimatedPose);}
+                if (visionEst.isPresent()){Logger.recordOutput(camera.getName()+"/Estpose",visionEst.get().estimatedPose);}
                 return;
             }
-            Logger.recordOutput("Estpose",visionEst.get().estimatedPose);
+            Logger.recordOutput(camera.getName()+"/Estpose",visionEst.get().estimatedPose);
 
             updateEstimationStdDevs(visionEst, result.getTargets());
 

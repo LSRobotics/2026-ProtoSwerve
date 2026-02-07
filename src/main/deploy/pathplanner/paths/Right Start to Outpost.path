@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.586255063657408,
+        "x": 1.5862550636574078,
         "y": 0.61859396701389
       },
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": -179.99999999976512
   },
   "reversed": false,
-  "folder": "Right to Outpost",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

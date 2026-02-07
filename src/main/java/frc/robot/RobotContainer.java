@@ -68,7 +68,7 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser;
     private final VisionSubsystem m_Vision = new VisionSubsystem(new VisionIOPhoton("Arducam_OV9281_USB_Camera", drivetrain::addVisionMeasurement, VisionConstants.cameraToRobot1)); 
-   // private final VisionSubsystem m_Vision2 = new VisionSubsystem(new VisionIOPhoton("Arducam_OV9281_USB_Camera (1)", drivetrain::addVisionMeasurement,VisionConstants.cameraToRobot2)); 
+   private final VisionSubsystem m_Vision2 = new VisionSubsystem(new VisionIOPhoton("Arducam_OV9281_USB_Camera (1)", drivetrain::addVisionMeasurement,VisionConstants.cameraToRobot2)); 
 
 
     public RobotContainer() {
