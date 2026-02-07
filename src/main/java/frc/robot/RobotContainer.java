@@ -16,7 +16,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import frc.robot.commands.AlignCommand;
-
+import frc.robot.commands.playMusicCommand;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -127,6 +127,9 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+        joystick.y().toggleOnTrue(new playMusicCommand().ignoringDisable(true));
+
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
